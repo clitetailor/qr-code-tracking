@@ -1,0 +1,51 @@
+<div class="HereMap" bind:this="{mapContainer}"></div>
+
+<style>
+  .HereMap {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  import { onMount, beforeUpdate } from 'svelte'
+
+  let mapContainer
+  export let latitude = 52.5
+  export let longitude = 13.4
+
+  let map
+  let marker
+
+  onMount(() => {
+    const platform = new H.service.Platform({
+      app_id: process.env.HERE_MAP_API,
+      app_code: process.env.HERE_MAP_CODE
+    })
+
+    const defaultLayers = platform.createDefaultLayers()
+    map = new H.Map(mapContainer, defaultLayers.normal.map, {
+      zoom: 15,
+      center: new H.geo.Point(latitude, longitude)
+    })
+
+    marker = new H.map.Marker({
+      lat: latitude,
+      lng: longitude
+    })
+    map.addObject(marker)
+  })
+
+  beforeUpdate(() => {
+    if (map) {
+      map.setCenter(new H.geo.Point(latitude, longitude))
+      map.removeObject(marker)
+
+      marker = new H.map.Marker({
+        lat: latitude,
+        lng: longitude
+      })
+      map.addObject(marker)
+    }
+  })
+</script>

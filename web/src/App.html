@@ -1,0 +1,24 @@
+<HereMap
+  latitude="{latitude}"
+  longitude="{longitude}"
+></HereMap>
+
+<script>
+  import { onMount } from 'svelte'
+  import HereMap from './HereMap.html'
+
+  let latitude
+  let longitude
+
+  onMount(() => {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        latitude = position.coords.latitude
+        longitude = position.coords.longitude
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  })
+</script>
