@@ -34,6 +34,11 @@
       lng: longitude
     })
     map.addObject(marker)
+
+    const behavior = new H.mapevents.Behavior(
+      new H.mapevents.MapEvents(map)
+    )
+    // const ui = H.ui.UI.createDefault(map, defaultLayers)
   })
 
   beforeUpdate(() => {

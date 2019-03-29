@@ -1,9 +1,12 @@
 .DS_Store
+.vagrant
 node_modules
 package-lock.json
 yarn.lock
 .env
+.git
+public
 
-web/public/bundle.*
+!.gitkeep
+
 server/assets/*
-!server/assets/.gitkeep

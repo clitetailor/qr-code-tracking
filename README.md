@@ -19,8 +19,8 @@ To start the web development server run:
 $ yarn web:dev
 ```
 
-To start the backend node server run:
+To start the backend node development server run:
 
 ```bash
-$ yarn server:start
+$ yarn server:dev
 ```
