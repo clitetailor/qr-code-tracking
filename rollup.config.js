@@ -39,7 +39,11 @@ export default {
     production && terser(),
     copy({
       'web/index.html': 'public/index.html',
-      'web/global.css': 'public/global.css'
+      'web/global.css': 'public/global.css',
+      'node_modules/material-design-lite/material.min.css':
+        'public/material-design-lite/material.min.css',
+      'node_modules/material-design-lite/material.min.js':
+        'public/material-design-lite/material.min.js'
     })
   ]
 }

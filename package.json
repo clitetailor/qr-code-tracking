@@ -7,13 +7,16 @@
     "web:build": "rollup -c rollup.config.js",
     "web:dev": "run-p web:start web:autobuild",
     "web:autobuild": "rollup -c rollup.config.js -w",
-    "web:start": "sirv public --dev"
+    "web:start": "sirv public --dev",
+    "database:migrate": "sequelize db:migrate",
+    "prettier": "prettier --config .prettierrc.yaml --write web/**/*.js --write server/**/*.js"
   },
   "dependencies": {
     "@koa/cors": "2",
     "apollo-boost": "^0.3.1",
     "apollo-server": "^2.4.8",
     "apollo-server-koa": "^2.4.8",
+    "axios": "^0.18.0",
     "cross-env": "^5.2.0",
     "graphql": "^14.2.0",
     "koa": "^2.7.0",
@@ -21,6 +24,7 @@
     "koa-logger": "^3.2.0",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
+    "material-design-lite": "^1.3.0",
     "moment": "^2.24.0",
     "pg": "^7.9.0",
     "pg-hstore": "^2.3.2",
