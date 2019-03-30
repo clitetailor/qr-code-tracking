@@ -2,8 +2,12 @@ const Koa = require('koa')
 const cors = require('@koa/cors')
 const koaBody = require('koa-body')
 const { ApolloServer } = require('apollo-server-koa')
+const winston = require('winston')
 
 const { graphqlSchema } = require('./schema')
+const { configureLogging } = require('./logging')
+
+configureLogging()
 
 const app = new Koa()
 
@@ -18,7 +22,7 @@ const server = new ApolloServer({
 server.applyMiddleware({ app })
 
 app.listen({ port: 4000 }, () =>
-  console.log(
+  winston.info(
     `🚀  Server ready at http://localhost:4000${
       server.graphqlPath
     }`
