@@ -7,8 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
+
   User.associate = function(models) {
-    // associations can be defined here
+    const { QRCode } = models
+
+    User.hasMany(QRCode, {
+      foreignKey: 'userId'
+    })
   }
+
   return User
 }

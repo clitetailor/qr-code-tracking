@@ -6,6 +6,7 @@ const winston = require('winston')
 
 const { graphqlSchema } = require('./schema')
 const { configureLogging } = require('./logging')
+const { context } = require('./context')
 
 configureLogging()
 
@@ -17,7 +18,8 @@ app.use(koaBody())
 const server = new ApolloServer({
   schema: graphqlSchema,
   introspection: true,
-  playground: true
+  playground: true,
+  context
 })
 server.applyMiddleware({ app })
 
