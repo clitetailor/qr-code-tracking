@@ -3,7 +3,13 @@ const moment = require('moment')
 
 const production = process.env.NODE_ENV === 'production'
 
+let configured = false
+
 function configureLogging() {
+  if (configured) {
+    return
+  }
+
   configure({
     level: production ? 'info' : 'debug',
     format: format.combine(
@@ -15,6 +21,7 @@ function configureLogging() {
             : moment().format('HH:mm:ss.SSS')
         }
       }),
+      format.splat(),
       format.printf(
         info =>
           `[${info.timestamp}] [${info.level}]: ${info.message}`
@@ -26,6 +33,8 @@ function configureLogging() {
       })
     ]
   })
+
+  configured = true
 }
 
 module.exports = {
