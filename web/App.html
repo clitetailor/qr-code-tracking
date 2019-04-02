@@ -1,28 +1,22 @@
-<!-- <HereMap
-  latitude="{latitude}"
-  longitude="{longitude}"
-></HereMap> -->
-
-<h1>Hello, World!</h1>
+<svelte:component this="{comp}"></svelte:component>
 
 <script>
-  import { onMount } from 'svelte'
-  import HereMap from './HereMap.html'
+  import { usePage } from './utils/page'
 
-  let latitude
-  let longitude
+  import Home from './Home.html'
+  import Login from './Login.html'
+  import Signup from './Signup.html'
 
-  onMount(() => {
-    /*
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        latitude = position.coords.latitude
-        longitude = position.coords.longitude
-      },
-      error => {
-        console.log(error)
-      }
-    )
-    */
+  const page = usePage()
+  let comp = Home
+
+  page('/', () => {
+    comp = Home
+  })
+  page('/login', () => {
+    comp = Login
+  })
+  page('/signup', () => {
+    comp = Signup
   })
 </script>
