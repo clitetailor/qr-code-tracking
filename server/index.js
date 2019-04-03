@@ -20,7 +20,6 @@ const app = new Koa()
 
 app.use(cors())
 app.use(koaBody())
-app.use(serve(path.resolve(__dirname, '../public')))
 
 const server = new ApolloServer({
   schema: graphqlSchema,
@@ -30,10 +29,17 @@ const server = new ApolloServer({
 })
 server.applyMiddleware({ app })
 
+app.use(async (ctx, next) => {
+  await new Promise(resolve => {
+    history()(ctx.request, ctx.response, () => resolve())
+  })
+  await next()
+})
+app.use(serve(path.resolve(__dirname, '../public')))
+
 app.listen({ port: 4000 }, async () => {
+  winston.info(`🚀  Server ready at http://localhost:4000`)
   winston.info(
-    `🚀  Server ready at http://localhost:4000${
-      server.graphqlPath
-    }`
+    'GraphQL server is available at https://localhost:4000/graphql'
   )
 })
