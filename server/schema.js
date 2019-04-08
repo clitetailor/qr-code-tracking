@@ -3,9 +3,10 @@ const { merge } = require('lodash')
 
 const { helloSchema } = require('./graphql/hello')
 const { rootSchema } = require('./graphql/root')
+const { userSchema } = require('./graphql/user')
 
 const { typeDefs, resolvers } = mergeSchemas({
-  schemas: [rootSchema, helloSchema]
+  schemas: [rootSchema, helloSchema, userSchema]
 })
 
 const graphqlSchema = makeExecutableSchema({

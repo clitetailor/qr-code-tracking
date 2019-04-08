@@ -1,5 +1,6 @@
 const { AuthenticationError } = require('apollo-server')
 
+const { typeDefs } = require('./types')
 const { generateAuthToken } = require('../../auth')
 
 const resolvers = {
@@ -15,6 +16,12 @@ const resolvers = {
         }
       })
 
+      if (!user) {
+        return new AuthenticationError(
+          'Invalid username or password'
+        )
+      }
+
       const token = await generateAuthToken({ userId: user.id })
 
       return { token }
@@ -25,12 +32,19 @@ const resolvers = {
       const { username, password } = args
 
       const [user, created] = await User.findOrCreate({
-        username,
-        password
+        where: {
+          username
+        },
+        defaults: {
+          username,
+          password
+        }
       })
 
       if (!created) {
-        return AuthenticationError()
+        return new AuthenticationError(
+          'Username already exists'
+        )
       }
 
       const token = await generateAuthToken({ userId: user.id })

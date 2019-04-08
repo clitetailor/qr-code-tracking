@@ -3,9 +3,10 @@
 <script>
   import { usePage } from './utils/page'
 
-  import Home from './pages/index/Home.html'
-  import Login from './pages/login/Login.html'
-  import Signup from './pages/signup/Signup.html'
+  import Home from './pages/index/index.html'
+  import Login from './pages/login/login.html'
+  import Signup from './pages/signup/signup.html'
+  import Dashboard from './pages/dashboard/dashboard.html'
 
   const page = usePage()
   let comp = Home
@@ -18,5 +19,9 @@
   })
   page('/signup', () => {
     comp = Signup
+  })
+
+  page('/dashboard', () => {
+    comp = Dashboard
   })
 </script>

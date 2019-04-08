@@ -12,6 +12,11 @@ const dotenvResult = dotenv.config({
   path: path.resolve(__dirname, '.env')
 })
 
+process.env.NODE_ENV =
+  process.env.NODE_ENV || production
+    ? 'production'
+    : 'development'
+
 if (dotenvResult.error) {
   process.exit(1)
 }
@@ -24,6 +29,7 @@ export default {
     name: 'app',
     file: path.resolve(__dirname, 'public/bundle.js')
   },
+  onwarn: () => {},
   plugins: [
     svelte({
       dev: !production,
@@ -33,7 +39,11 @@ export default {
     }),
     resolve(),
     replace({
-      ...getDotEnvConfig(['HERE_MAP_API', 'HERE_MAP_CODE'])
+      ...getDotEnvConfig([
+        'HERE_MAP_API',
+        'HERE_MAP_CODE',
+        'NODE_ENV'
+      ])
     }),
     commonjs(),
     production && terser(),

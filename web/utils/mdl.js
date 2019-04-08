@@ -1,6 +1,6 @@
 import { onMount } from 'svelte'
 
-export function initMdl() {
+export function loadMdl() {
   onMount(() => {
     componentHandler.upgradeAllRegistered()
   })

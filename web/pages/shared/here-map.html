@@ -1,7 +1,7 @@
-<div class="HereMap" bind:this="{mapContainer}"></div>
+<div class="c-here-map" bind:this="{mapContainer}"></div>
 
 <style>
-  .HereMap {
+  .c-here-map {
     width: 100%;
     height: 100%;
   }
@@ -38,7 +38,6 @@
     const behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(map)
     )
-    // const ui = H.ui.UI.createDefault(map, defaultLayers)
   })
 
   beforeUpdate(() => {

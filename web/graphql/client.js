@@ -1,4 +1,5 @@
 import { ApolloClient } from 'apollo-client'
+import { concat } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
@@ -12,12 +13,14 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : ''
+      ...(token
+        ? { authorization: `Bearer ${token}` }
+        : { authorization: undefined })
     }
   }
 })
 
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: concat(authLink, httpLink),
   cache: new InMemoryCache()
 })

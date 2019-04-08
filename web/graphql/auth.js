@@ -16,7 +16,7 @@ export async function signup(username, password) {
     }
   })
 
-  localStorage.setItem('token', payload.token)
+  localStorage.setItem('token', payload.data.signup.token)
   await client.resetStore()
 
   return payload
@@ -37,7 +37,7 @@ export async function login(username, password) {
     }
   })
 
-  localStorage.setItem('token', payload.token)
+  localStorage.setItem('token', payload.data.login.token)
   await client.resetStore()
 
   return payload

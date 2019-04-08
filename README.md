@@ -36,10 +36,10 @@ $ yarn
 
 To run the program, you need to run the web development server alongside the node backend server
 
-To start the web development server run:
+To start the web development process run:
 
 ```bash
-$ yarn web:dev
+$ yarn web:autobuild
 ```
 
 To start the node backend development server run:

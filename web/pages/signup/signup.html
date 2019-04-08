@@ -1,0 +1,137 @@
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div
+      class="mdl-layout__drawer-button"
+      on:click="{() => history.back()}"
+    >
+      <i class="material-icons">arrow_back</i>
+    </div>
+    <div class="mdl-layout__header-row">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" href="/login">
+          Login
+        </a>
+        <a class="mdl-navigation__link" href="/signup">
+          Signup
+        </a>
+      </nav>
+    </div>
+  </header>
+  <main class="mdl-layout__content c-signup__layout">
+    <form
+      class="c-signup__form"
+      action="#"
+      on:submit="{onSubmit}"
+    >
+      <h4 class="c-signup__title">Signup</h4>
+      <div
+        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+      >
+        <input
+          name="username"
+          class="mdl-textfield__input"
+          type="text"
+          bind:value="{username}"
+        />
+        <label class="mdl-textfield__label">Username</label>
+      </div>
+      <div
+        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+      >
+        <input
+          name="password"
+          class="mdl-textfield__input"
+          type="password"
+          bind:value="{password}"
+        />
+        <label class="mdl-textfield__label" for="password">
+          Password
+        </label>
+      </div>
+      <div
+        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+        class:is-invalid="{errMsg}"
+        on:change="{onConfirmPasswordChange}"
+      >
+        <input
+          name="confirm-password"
+          class="mdl-textfield__input"
+          type="password"
+          bind:value="{confirmPassword}"
+        />
+        <label
+          class="mdl-textfield__label"
+          for="confirm-password"
+        >
+          Confirm Password
+        </label>
+        <span class="mdl-textfield__error">
+          {errMsg}
+        </span>
+      </div>
+      <button
+        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+      >
+        Submit
+      </button>
+    </form>
+  </main>
+</div>
+
+<style>
+  .c-signup__form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .c-signup__title {
+    margin: 0;
+    width: auto;
+  }
+</style>
+
+<script>
+  import { signup } from '../../graphql/auth'
+  import { loadMdl } from '../../utils/mdl'
+  import { usePage } from '../../utils/page'
+
+  let username = ''
+  let password = ''
+  let confirmPassword = ''
+
+  let errMsg = ''
+
+  loadMdl()
+  const page = usePage()
+
+  function hasError() {
+    return errMsg
+  }
+
+  function onConfirmPasswordChange() {
+    if (confirmPassword !== password) {
+      errMsg = 'Password does not match'
+    }
+  }
+
+  async function onSubmit(event) {
+    event.preventDefault()
+    try {
+      if (password === confirmPassword) {
+        const payload = await signup(username, password)
+
+        page('/dashboard')
+      }
+    } catch (error) {
+      if ('graphQLErrors' in error) {
+        errMsg = error.graphQLErrors[0].message
+      }
+      throw error
+    }
+  }
+</script>

@@ -3,6 +3,7 @@ module.exports = {
     username: 'vagrant',
     password: 'vagrant',
     database: 'qrct_dev',
+    logging: false,
     host: '127.0.0.1',
     port: 5432,
     dialect: 'postgres'
@@ -11,6 +12,7 @@ module.exports = {
     username: 'vagrant',
     password: 'vagrant',
     database: 'qrct_test',
+    logging: false,
     host: '127.0.0.1',
     port: 5432,
     dialect: 'postgres'
@@ -19,6 +21,7 @@ module.exports = {
     username: 'vagrant',
     password: 'vagrant',
     database: 'qrct_prod',
+    logging: false,
     host: '127.0.0.1',
     port: 5432,
     dialect: 'postgres'
