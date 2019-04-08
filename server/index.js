@@ -26,6 +26,11 @@ const server = new ApolloServer({
 })
 server.applyMiddleware({ app })
 
+app.use(
+  '/assets',
+  express.static(path.resolve(__dirname, './assets'))
+)
+
 app.use(history())
 app.use(express.static(path.resolve(__dirname, '../public')))
 
