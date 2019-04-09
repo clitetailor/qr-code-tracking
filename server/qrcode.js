@@ -20,3 +20,9 @@ async function main() {
 }
 
 main()
+
+function generateQRCode(qrcodeId) {}
+
+module.exports = {
+  generateQRCode
+}

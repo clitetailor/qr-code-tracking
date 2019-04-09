@@ -1,5 +1,5 @@
-import { client } from './client'
 import gql from 'graphql-tag'
+import { client } from './client'
 
 export async function signup(username, password) {
   const payload = await client.mutate({

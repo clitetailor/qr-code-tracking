@@ -39,6 +39,7 @@
 
     <button
       class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored c-button__fab"
+      on:click="{onFabButtonClick}"
     >
       <i class="material-icons">add</i>
     </button>
@@ -47,15 +48,17 @@
 
 <style>
   .c-dashboard__main {
+    padding-bottom: 180px;
     width: 100%;
     height: 100%;
   }
 
   .c-button__fab {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     bottom: 40px;
+    z-index: 1000;
   }
 
   .c-card {
@@ -104,4 +107,8 @@
     title: 'Find Pet',
     description: 'Generated code for finding Pet'
   }))
+
+  function onFabButtonClick() {
+    page('/edit')
+  }
 </script>

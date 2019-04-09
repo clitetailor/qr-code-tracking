@@ -7,6 +7,7 @@
   import Login from './pages/login/login.html'
   import Signup from './pages/signup/signup.html'
   import Dashboard from './pages/dashboard/dashboard.html'
+  import Edit from './pages/edit/edit.html'
 
   const page = usePage()
   let comp = Home
@@ -23,5 +24,9 @@
 
   page('/dashboard', () => {
     comp = Dashboard
+  })
+
+  page('/edit', () => {
+    comp = Edit
   })
 </script>
