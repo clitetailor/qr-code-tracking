@@ -37,7 +37,9 @@ export default {
         css.write(path.resolve(__dirname, 'public/bundle.css'))
       }
     }),
-    resolve(),
+    resolve({
+      browser: true
+    }),
     replace({
       ...getDotEnvConfig([
         'HERE_MAP_API',
@@ -45,7 +47,14 @@ export default {
         'NODE_ENV'
       ])
     }),
-    commonjs(),
+    commonjs({
+      namedExports: {
+        'subscriptions-transport-ws': ['SubscriptionClient']
+      },
+      exclude: [
+        'node_modules/subscriptions-transport-ws/server.js'
+      ]
+    }),
     production && terser(),
     copy({
       'web/index.html': 'public/index.html',

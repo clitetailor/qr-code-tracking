@@ -1,13 +1,14 @@
 const { ApolloServer } = require('apollo-server-express')
 const express = require('express')
+const http = require('http')
 const bodyParser = require('body-parser')
 const history = require('connect-history-api-fallback')
 const winston = require('winston')
 const path = require('path')
 
 const { graphqlSchema } = require('./schema')
-const { configureLogging } = require('./logging')
-const { configureDotEnv } = require('./dotenv')
+const { configureLogging } = require('./config/logging')
+const { configureDotEnv } = require('./config/dotenv')
 const { context } = require('./context')
 
 configureLogging()
@@ -26,17 +27,21 @@ const server = new ApolloServer({
 })
 server.applyMiddleware({ app })
 
+const httpServer = http.createServer(app)
+server.installSubscriptionHandlers(httpServer)
+
+// TODO: Need to be replaced with signed url.
 app.use(
   '/assets',
-  express.static(path.resolve(__dirname, './assets'))
+  express.static(path.resolve(__dirname, 'assets'))
 )
 
 app.use(history())
 app.use(express.static(path.resolve(__dirname, '../public')))
 
-app.listen(4000, () => {
+httpServer.listen({ port: 4000 }, () => {
   winston.info(`🚀  Server ready at http://localhost:4000`)
   winston.info(
-    'GraphQL server is available at https://localhost:4000/graphql'
+    'GraphQL server is available at http://localhost:4000/graphql'
   )
 })

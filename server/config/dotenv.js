@@ -8,11 +8,11 @@ function configureDotEnv() {
   configureLogging()
 
   const dotenvResult = dotenv.config({
-    path: path.resolve(__dirname, '../.env')
+    path: path.resolve(__dirname, '../../.env')
   })
 
   if (dotenvResult.error) {
-    winston.info()
+    winston.error(dotenvResult.error)
   }
 }
 

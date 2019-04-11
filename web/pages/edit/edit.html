@@ -69,9 +69,12 @@
 
 <script>
   import { loadMdl } from '../../utils/mdl'
+  import { usePage } from '../../utils/page'
   import { createQRCode } from '../../graphql/qrcode'
 
   loadMdl()
+  const page = usePage()
+
   let errMsg = ''
 
   let title = ''
@@ -80,9 +83,11 @@
   async function onSubmit(event) {
     event.preventDefault()
 
-    const result = await createQRCode({
+    await createQRCode({
       title,
       description
     })
+
+    page('/dashboard')
   }
 </script>

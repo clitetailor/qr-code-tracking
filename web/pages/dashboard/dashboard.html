@@ -6,11 +6,11 @@
   </header>
   <main class="mdl-layout__content c-dashboard__main">
     <div class="mdl-grid">
-      {#each qrcodes as code}
+      {#each qrcodes as qrcode (qrcode.id)}
       <div class="mdl-cell mdl-cell--4-col">
         <div class="mdl-card  mdl-shadow--2dp c-card">
           <div class="mdl-card__media c-card__image">
-            <img src="{code.qrcodeUrl}" alt="qrcode" />
+            <img src="/assets/{qrcode.id}.png" alt="qrcode" />
           </div>
           <div class="mdl-card__title c-title">
             <div class="mdl-card__menu">
@@ -19,15 +19,37 @@
               >
                 <i class="material-icons">share</i>
               </button>
+
+              <button
+                id="c-card__menu-{qrcode.id}"
+                class="mdl-button mdl-js-button mdl-button--icon"
+              >
+                <i class="material-icons">more_vert</i>
+              </button>
+
+              <ul
+                class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                for="c-card__menu-{qrcode.id}"
+              >
+                <li
+                  class="mdl-menu__item"
+                  on:click="{onCardMenuRemoveClick.bind(null, qrcode.id)}"
+                >
+                  Remove
+                </li>
+              </ul>
             </div>
-            <h2 class="mdl-card__title-text">{code.title}</h2>
+            <h2 class="mdl-card__title-text">{qrcode.title}</h2>
           </div>
+          {#if qrcode.description}
           <div class="mdl-card__supporting-text">
-            {code.description}
+            {qrcode.description}
           </div>
+          {/if}
           <div class="mdl-card__actions mdl-card--border">
             <a
               class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+              on:click="{() => {}}"
             >
               More
             </a>
@@ -83,6 +105,7 @@
     padding: 20px;
     display: flex;
     justify-content: center;
+
     /*
     width: 180px;
     height: 180px;
@@ -96,19 +119,59 @@
 </style>
 
 <script>
+  import { onMount, onDestroy } from 'svelte'
+
+  import {
+    getQRCodes,
+    removeQRCode,
+    qrcodeAdded,
+    qrcodeRemoved
+  } from '../../graphql/qrcode'
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'
 
   loadMdl()
   const page = usePage()
 
-  const qrcodes = Array.from({ length: 4 }, () => ({
-    qrcodeUrl: '/assets/sample.png',
-    title: 'Find Pet',
-    description: 'Generated code for finding Pet'
-  }))
+  let qrcodes = []
+  let subscriptions = {}
+
+  onMount(async () => {
+    qrcodes = (await getQRCodes()).data.qrcodes
+
+    subscriptions.qrcodeAdded = qrcodeAdded().subscribe(
+      result => {
+        const qrcode = result.data.qrcodeAdded
+
+        qrcodes.push(qrcode)
+        qrcodes = qrcodes
+      }
+    )
+    subscriptions.qrcodeRemoved = qrcodeRemoved().subscribe(
+      result => {
+        const qrcode = result.data.qrcodeRemoved
+        const qrcodeIndex = qrcodes.findIndex(
+          c => c.id === qrcode.id
+        )
+
+        if (qrcodeIndex !== -1) {
+          qrcodes.splice(qrcodeIndex, 1)
+          qrcodes = qrcodes
+        }
+      }
+    )
+  })
+
+  onDestroy(() => {
+    subscriptions.qrcodeAdded.unsubscribe()
+    subscriptions.qrcodeRemoved.unsubscribe()
+  })
 
   function onFabButtonClick() {
     page('/edit')
+  }
+
+  function onCardMenuRemoveClick(qrcodeId) {
+    removeQRCode(qrcodeId)
   }
 </script>

@@ -13,6 +13,16 @@ const typeDefs = `
 
   extend type Mutation {
     createQRCode(qrcodeInput: QRCodeInput): QRCode
+    removeQRCode(id: ID): QRCode
+  }
+
+  extend type Query {
+    qrcodes: [QRCode]
+  }
+
+  extend type Subscription {
+    qrcodeAdded: QRCode
+    qrcodeRemoved: QRCode
   }
 `
 

@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       title: DataTypes.STRING,
-      qrcodeUrl: DataTypes.STRING
+      qrcodeUrl: DataTypes.STRING,
+      description: DataTypes.STRING
     },
     {}
   )
