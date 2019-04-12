@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Material Icons';
+  src: url(/fonts/MaterialIcons-Regular.ttf);
+}
+
 html,
 body {
   padding: 0;
