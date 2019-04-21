@@ -6,11 +6,17 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { getMainDefinition } from 'apollo-utilities'
 import { WebSocketLink } from 'apollo-link-ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { gql } from 'apollo-server'
 
 const wsClient = new SubscriptionClient(
   'ws://localhost:4000/graphql',
   {
-    reconnect: true
+    reconnect: true,
+    connectionParams: () => {
+      return {
+        authToken: localStorage.getItem('token')
+      }
+    }
   }
 )
 

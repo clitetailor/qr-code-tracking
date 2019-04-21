@@ -12,7 +12,7 @@ function generateAuthToken({ userId }) {
   )
 }
 
-async function contractAuthToken(token) {
+async function verifyAuthToken(token) {
   const { userId, iat } = await util.promisify(jwt.verify)(
     token,
     process.env.SECRET_KEY,
@@ -36,6 +36,6 @@ function requireAuth(callback) {
 
 module.exports = {
   generateAuthToken,
-  contractAuthToken,
+  verifyAuthToken,
   requireAuth
 }

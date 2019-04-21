@@ -9,7 +9,7 @@ const path = require('path')
 const { graphqlSchema } = require('./schema')
 const { configureLogging } = require('./config/logging')
 const { configureDotEnv } = require('./config/dotenv')
-const { context } = require('./context')
+const { context, onConnect } = require('./context')
 
 configureLogging()
 configureDotEnv()
@@ -23,7 +23,10 @@ const server = new ApolloServer({
   schema: graphqlSchema,
   introspection: true,
   playground: true,
-  context
+  context,
+  subscriptions: {
+    onConnect
+  }
 })
 server.applyMiddleware({ app })
 

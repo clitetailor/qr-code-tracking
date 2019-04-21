@@ -1,4 +1,4 @@
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   schema {
     query: Query
     mutation: Mutation

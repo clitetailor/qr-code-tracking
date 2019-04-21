@@ -1,4 +1,4 @@
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   type AuthPayload {
     token: String
   }

@@ -1,4 +1,4 @@
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   type QRCode {
     id: ID
     title: String

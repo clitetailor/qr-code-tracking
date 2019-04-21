@@ -1,8 +1,5 @@
-const { AuthenticationError } = require('apollo-server')
-const winston = require('winston')
-
 const db = require('./database')
-const { contractAuthToken } = require('./auth')
+const { verifyAuthToken } = require('./auth')
 
 async function context({ req, connection }) {
   let userId
@@ -11,22 +8,18 @@ async function context({ req, connection }) {
     return connection.context
   }
 
-  try {
-    const authorization = req.headers.authorization
+  if (req.headers.authorization) {
+    try {
+      const authToken = req.headers.authorization.split(
+        /\s+/
+      )[1]
 
-    if (authorization) {
-      const token = authorization.split(/\s+/)[1]
+      if (authToken) {
+        tokenData = await verifyAuthToken(authToken)
 
-      if (token) {
-        const tokenData = await contractAuthToken(token)
-
-        if (tokenData) {
-          userId = tokenData.userId
-        }
+        userId = tokenData.userId
       }
-    }
-  } catch (error) {
-    winston.error(error)
+    } catch (error) {}
   }
 
   return {
@@ -35,6 +28,27 @@ async function context({ req, connection }) {
   }
 }
 
+async function onConnect(connectionParams) {
+  let userId
+
+  if (connectionParams.authToken) {
+    try {
+      const authToken = await verifyAuthToken(
+        connectionParams.authToken
+      )
+
+      if (authToken && authToken.userId) {
+        userId = authToken.userId
+      }
+    } catch (error) {}
+  }
+
+  return {
+    userId
+  }
+}
+
 module.exports = {
-  context
+  context,
+  onConnect
 }
