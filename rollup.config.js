@@ -47,14 +47,7 @@ export default {
         'NODE_ENV'
       ])
     }),
-    commonjs({
-      namedExports: {
-        'subscriptions-transport-ws': ['SubscriptionClient']
-      },
-      exclude: [
-        'node_modules/subscriptions-transport-ws/server.js'
-      ]
-    }),
+    commonjs(),
     production && terser(),
     copy({
       'web/index.html': 'public/index.html',

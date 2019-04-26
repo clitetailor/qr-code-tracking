@@ -8,6 +8,7 @@
   import Signup from './pages/signup/signup.html'
   import Dashboard from './pages/dashboard/dashboard.html'
   import Edit from './pages/edit/edit.html'
+  import Detail from './pages/detail/detail.html'
 
   const page = usePage()
   let comp = Home
@@ -26,7 +27,11 @@
     comp = Dashboard
   })
 
-  page('/edit', () => {
+  page('/edit/*', () => {
     comp = Edit
+  })
+
+  page('/detail/*', () => {
+    comp = Detail
   })
 </script>

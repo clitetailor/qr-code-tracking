@@ -49,9 +49,15 @@
           <div class="mdl-card__actions mdl-card--border">
             <a
               class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-              on:click="{() => page(`/edit/${qrcode.id}`)}"
+              on:click="{() => page(`/detail/${qrcode.id}`)}"
             >
               More
+            </a>
+            <a
+              class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+              on:click="{() => page(`/edit/${qrcode.id}`)}"
+            >
+              Edit
             </a>
           </div>
         </div>
