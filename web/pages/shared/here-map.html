@@ -29,27 +29,38 @@
       center: new H.geo.Point(latitude, longitude)
     })
 
-    marker = new H.map.Marker({
-      lat: latitude,
-      lng: longitude
-    })
-    map.addObject(marker)
-
     const behavior = new H.mapevents.Behavior(
       new H.mapevents.MapEvents(map)
     )
   })
 
-  beforeUpdate(() => {
-    if (map) {
-      map.setCenter(new H.geo.Point(latitude, longitude))
-      map.removeObject(marker)
+  export function initMarkers(trackingInfos) {
+    const markers = []
+    const group = new H.map.Group()
 
-      marker = new H.map.Marker({
+    for (const trackingInfo of trackingInfos) {
+      const { latitude, longitude } = trackingInfo
+
+      const m = new H.map.Marker({
         lat: latitude,
         lng: longitude
       })
-      map.addObject(marker)
+
+      markers.push(m)
     }
-  })
+    group.addObjects(markers)
+    map.addObject(group)
+
+    map.setViewBounds(group.getBounds())
+  }
+
+  export function addMarker(trackingInfo) {
+    const { latitude, longitude } = trackingInfo
+
+    marker = new H.map.Marker({
+      lat: latitude,
+      lng: longitude
+    })
+    map.addObject(marker)
+  }
 </script>

@@ -11,6 +11,7 @@
     </div>
   </header>
   <main class="mdl-layout__content">
+    <HereMap bind:this="{hereMap}"></HereMap>
     {#each trackingInfos as trackingInfo}
     <div>
       <span>Longitude: {trackingInfo.longitude}</span>
@@ -34,6 +35,8 @@
 <script>
   import { onDestroy } from 'svelte'
 
+  import HereMap from '../shared/here-map.html'
+
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'
   import {
@@ -45,6 +48,7 @@
   const page = usePage()
 
   let trackingInfos = []
+  let hereMap
 
   const subscriptions = {}
 
@@ -53,10 +57,14 @@
 
     trackingInfos = await getTrackingInfos(qrcodeId)
 
+    hereMap.initMarkers(trackingInfos)
+
     subscriptions.trackingInfoAdded = trackingInfoAdded(
       qrcodeId
     ).subscribe(trackingInfo => {
       trackingInfos.push(trackingInfo)
+      hereMap.addMarker(trackingInfo)
+
       trackingInfos = trackingInfos
     })
   })
