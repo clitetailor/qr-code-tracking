@@ -18,6 +18,7 @@
     >
       <div
         class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+        class:is-dirty="{title}"
       >
         <input
           name="title"
@@ -31,6 +32,22 @@
       </div>
       <div
         class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+        class:is-dirty="{redirectUrl}"
+        class:is-invalid="{errMsg}"
+      >
+        <input
+          name="redirectUrl"
+          class="mdl-textfield__input"
+          type="text"
+          bind:value="{redirectUrl}"
+        />
+        <label class="mdl-textfield__label" for="description">
+          Redirect URL
+        </label>
+      </div>
+      <div
+        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+        class:is-dirty="{description}"
         class:is-invalid="{errMsg}"
       >
         <textarea
@@ -70,7 +87,11 @@
 <script>
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'
-  import { createQRCode } from '../../graphql/qrcode'
+  import {
+    createQRCode,
+    getQRCode,
+    updateQRCode
+  } from '../../graphql/qrcode'
 
   loadMdl()
   const page = usePage()
@@ -79,14 +100,37 @@
 
   let title = ''
   let description = ''
+  let redirectUrl = ''
+
+  let id
+
+  page('/edit/:id', async ctx => {
+    id = ctx.params.id
+
+    const qrcode = await getQRCode(id)
+    title = qrcode.title
+    description = qrcode.description
+    redirectUrl = qrcode.redirectUrl
+  })
 
   async function onSubmit(event) {
-    event.preventDefault()
+    if (!id) {
+      event.preventDefault()
 
-    await createQRCode({
-      title,
-      description
-    })
+      await createQRCode({
+        title,
+        description,
+        redirectUrl
+      })
+    } else {
+      event.preventDefault()
+
+      await updateQRCode(id, {
+        title,
+        description,
+        redirectUrl
+      })
+    }
 
     page('/dashboard')
   }

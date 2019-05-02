@@ -1,0 +1,18 @@
+<script>
+  import { usePage } from '../../utils/page'
+  import { addTrackingInfo } from '../../graphql/trackinginfo'
+
+  const page = usePage()
+
+  page('/qrcode/:qrcodeId', ctx => {
+    const qrcodeId = ctx.params.qrcodeId
+
+    navigator.geolocation.getCurrentPosition(async position => {
+      const trackingInfo = await addTrackingInfo({
+        qrcodeId,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      })
+    })
+  })
+</script>

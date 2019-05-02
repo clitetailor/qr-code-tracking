@@ -24,7 +24,7 @@ async function context({ req, connection }) {
 
   return {
     ...db,
-    ...(userId ? { userId } : {})
+    userId
   }
 }
 
@@ -44,6 +44,7 @@ async function onConnect(connectionParams) {
   }
 
   return {
+    ...db,
     userId
   }
 }

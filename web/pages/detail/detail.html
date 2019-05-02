@@ -11,48 +11,12 @@
     </div>
   </header>
   <main class="mdl-layout__content">
-    <form
-      class="c-qrcode__form"
-      action="#"
-      on:submit="{onSubmit}"
-    >
-      <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-      >
-        <input
-          name="title"
-          class="mdl-textfield__input"
-          type="text"
-          bind:value="{title}"
-        />
-        <label class="mdl-textfield__label" for="title">
-          Title
-        </label>
-      </div>
-      <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-        class:is-invalid="{errMsg}"
-      >
-        <textarea
-          name="description"
-          class="mdl-textfield__input"
-          rows="3"
-          type="text"
-          bind:value="{description}"
-        ></textarea>
-        <label class="mdl-textfield__label" for="description">
-          Description
-        </label>
-        <span class="mdl-textfield__error">
-          {errMsg}
-        </span>
-      </div>
-      <button
-        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-      >
-        Submit
-      </button>
-    </form>
+    {#each trackingInfos as trackingInfo}
+    <div>
+      <span>Longitude: {trackingInfo.longitude}</span>
+      <span>Latitude: {trackingInfo.latitude}</span>
+    </div>
+    {/each}
   </main>
 </div>
 
@@ -68,26 +32,36 @@
 </style>
 
 <script>
+  import { onDestroy } from 'svelte'
+
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'
-  import { createQRCode } from '../../graphql/qrcode'
+  import {
+    getTrackingInfos,
+    trackingInfoAdded
+  } from '../../graphql/trackinginfo'
 
   loadMdl()
   const page = usePage()
 
-  let errMsg = ''
+  let trackingInfos = []
 
-  let title = ''
-  let description = ''
+  const subscriptions = {}
 
-  async function onSubmit(event) {
-    event.preventDefault()
+  page('/detail/:id', async context => {
+    const qrcodeId = parseInt(context.params.id)
 
-    await createQRCode({
-      title,
-      description
+    trackingInfos = await getTrackingInfos(qrcodeId)
+
+    subscriptions.trackingInfoAdded = trackingInfoAdded(
+      qrcodeId
+    ).subscribe(trackingInfo => {
+      trackingInfos.push(trackingInfo)
+      trackingInfos = trackingInfos
     })
+  })
 
-    page('/dashboard')
-  }
+  onDestroy(() => {
+    subscriptions.trackingInfoAdded.unsubscribe()
+  })
 </script>

@@ -4,6 +4,20 @@ const { typeDefs } = require('./types')
 const { generateAuthToken } = require('../../auth')
 
 const resolvers = {
+  Query: {
+    checkAuth: (root, args, context) => {
+      if (context.userId) {
+        return {
+          ok: true
+        }
+      }
+
+      return {
+        ok: false
+      }
+    }
+  },
+
   Mutation: {
     login: async (root, args, context) => {
       const { User } = context

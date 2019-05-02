@@ -1,12 +1,14 @@
 import gql from 'graphql-tag'
 import { client } from './client'
 
-export function createQRCode(qrcodeInput) {
-  return client.mutate({
+export async function createQRCode(qrcodeInput) {
+  const payload = await client.mutate({
     mutation: gql`
       mutation CreateQRCode($qrcodeInput: QRCodeInput) {
         createQRCode(qrcodeInput: $qrcodeInput) {
+          id
           title
+          redirectUrl
           description
         }
       }
@@ -15,10 +17,55 @@ export function createQRCode(qrcodeInput) {
       qrcodeInput
     }
   })
+
+  return payload.data.createQRCode
 }
 
-export function getQRCodes() {
-  return client.query({
+export async function updateQRCode(id, qrcodeInput) {
+  const payload = await client.mutate({
+    mutation: gql`
+      mutation UpdateQRCode(
+        $id: ID
+        $qrcodeInput: QRCodeInput
+      ) {
+        updateQRCode(id: $id, qrcodeInput: $qrcodeInput) {
+          title
+          description
+        }
+      }
+    `,
+    variables: {
+      id,
+      qrcodeInput
+    }
+  })
+
+  return payload.data.updateQRCode
+}
+
+export async function getQRCode(id) {
+  const payload = await client.query({
+    query: gql`
+      query GetQRCode($id: ID) {
+        qrcode(id: $id) {
+          id
+          title
+          redirectUrl
+          description
+          qrcodeUrl
+        }
+      }
+    `,
+    variables: {
+      id
+    }
+  })
+
+  return payload.data.qrcode
+}
+
+export async function getQRCodes() {
+  const payload = await client.query({
     query: gql`
       query GetQRCodes {
         qrcodes {
@@ -30,10 +77,12 @@ export function getQRCodes() {
       }
     `
   })
+
+  return payload.data.qrcodes
 }
 
-export function removeQRCode(qrcodeId) {
-  return client.mutate({
+export async function removeQRCode(qrcodeId) {
+  const payload = await client.mutate({
     mutation: gql`
       mutation RemoveQRCode($id: ID) {
         removeQRCode(id: $id) {
@@ -45,31 +94,54 @@ export function removeQRCode(qrcodeId) {
       id: qrcodeId
     }
   })
+
+  return payload.data.removeQRCode
 }
 
 export function qrcodeAdded() {
-  return client.subscribe({
-    query: gql`
-      subscription QRCodeAdded {
-        qrcodeAdded {
-          id
-          title
-          description
-          qrcodeUrl
+  return client
+    .subscribe({
+      query: gql`
+        subscription QRCodeAdded {
+          qrcodeAdded {
+            id
+            title
+            description
+            qrcodeUrl
+          }
         }
-      }
-    `
-  })
+      `
+    })
+    .map(payload => payload.data.qrcodeAdded)
+}
+
+export function qrcodeUpdated() {
+  return client
+    .subscribe({
+      query: gql`
+        subscription QRCodeUpdated {
+          qrcodeUpdated {
+            id
+            title
+            description
+            qrcodeUrl
+          }
+        }
+      `
+    })
+    .map(payload => payload.data.qrcodeUpdated)
 }
 
 export function qrcodeRemoved() {
-  return client.subscribe({
-    query: gql`
-      subscription QRCodeRemoved {
-        qrcodeRemoved {
-          id
+  return client
+    .subscribe({
+      query: gql`
+        subscription QRCodeRemoved {
+          qrcodeRemoved {
+            id
+          }
         }
-      }
-    `
-  })
+      `
+    })
+    .map(payload => payload.data.qrcodeRemoved)
 }

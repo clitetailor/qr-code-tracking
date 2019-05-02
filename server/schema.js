@@ -5,9 +5,16 @@ const { helloSchema } = require('./graphql/hello')
 const { rootSchema } = require('./graphql/root')
 const { userSchema } = require('./graphql/user')
 const { qrcodeSchema } = require('./graphql/qrcode')
+const { trackingInfoSchema } = require('./graphql/trackinginfo')
 
 const { typeDefs, resolvers } = mergeSchemas({
-  schemas: [rootSchema, helloSchema, userSchema, qrcodeSchema]
+  schemas: [
+    rootSchema,
+    helloSchema,
+    userSchema,
+    qrcodeSchema,
+    trackingInfoSchema
+  ]
 })
 
 const graphqlSchema = makeExecutableSchema({

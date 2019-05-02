@@ -42,3 +42,17 @@ export async function login(username, password) {
 
   return payload
 }
+
+export async function checkAuth() {
+  const payload = await client.query({
+    query: gql`
+      query CheckAuth {
+        checkAuth {
+          ok
+        }
+      }
+    `
+  })
+
+  return payload.data.checkAuth
+}

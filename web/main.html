@@ -2,6 +2,7 @@
 
 <script>
   import { usePage } from './utils/page'
+  import { checkAuth } from './graphql/auth'
 
   import Home from './pages/index/index.html'
   import Login from './pages/login/login.html'
@@ -9,29 +10,64 @@
   import Dashboard from './pages/dashboard/dashboard.html'
   import Edit from './pages/edit/edit.html'
   import Detail from './pages/detail/detail.html'
+  import QRCode from './pages/qrcode/qrcode.html'
+
+  let comp
 
   const page = usePage()
-  let comp = Home
 
   page('/', () => {
-    comp = Home
+    ifAuthed(() => {
+      comp = Home
+    })
   })
   page('/login', () => {
-    comp = Login
+    ifAuthed(() => {
+      comp = Login
+    })
   })
   page('/signup', () => {
-    comp = Signup
+    ifAuthed(() => {
+      comp = Signup
+    })
   })
 
   page('/dashboard', () => {
-    comp = Dashboard
+    ifNotAuthed(() => {
+      comp = Dashboard
+    })
   })
-
-  page('/edit/*', () => {
-    comp = Edit
+  page('/edit*', () => {
+    ifNotAuthed(() => {
+      comp = Edit
+    })
   })
-
   page('/detail/*', () => {
-    comp = Detail
+    ifNotAuthed(() => {
+      comp = Detail
+    })
   })
+  page('/qrcode/*', () => {
+    comp = QRCode
+  })
+
+  async function ifNotAuthed(callback) {
+    const authStatus = await checkAuth()
+
+    if (authStatus.ok) {
+      callback()
+    } else {
+      page('/')
+    }
+  }
+
+  async function ifAuthed(callback) {
+    const authStatus = await checkAuth()
+
+    if (!authStatus.ok) {
+      callback()
+    } else {
+      page('/dashboard')
+    }
+  }
 </script>

@@ -12,32 +12,19 @@
           <div class="mdl-card__media c-card__image">
             <img src="/assets/{qrcode.id}.png" alt="qrcode" />
           </div>
-          <div class="mdl-card__title c-title">
+          <div class="mdl-card__title">
             <div class="mdl-card__menu">
               <button
                 class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
               >
                 <i class="material-icons">share</i>
               </button>
-
               <button
-                id="c-card__menu-{qrcode.id}"
                 class="mdl-button mdl-js-button mdl-button--icon"
+                on:click="{() => onCardMenuRemoveClick(qrcode.id)}"
               >
-                <i class="material-icons">more_vert</i>
+                <i class="material-icons">close</i>
               </button>
-
-              <ul
-                class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                for="c-card__menu-{qrcode.id}"
-              >
-                <li
-                  class="mdl-menu__item"
-                  on:click="{onCardMenuRemoveClick.bind(null, qrcode.id)}"
-                >
-                  Remove
-                </li>
-              </ul>
             </div>
             <h2 class="mdl-card__title-text">{qrcode.title}</h2>
           </div>
@@ -131,6 +118,7 @@
     getQRCodes,
     removeQRCode,
     qrcodeAdded,
+    qrcodeUpdated,
     qrcodeRemoved
   } from '../../graphql/qrcode'
   import { loadMdl } from '../../utils/mdl'
@@ -143,19 +131,28 @@
   let subscriptions = {}
 
   onMount(async () => {
-    qrcodes = (await getQRCodes()).data.qrcodes
+    qrcodes = await getQRCodes()
 
     subscriptions.qrcodeAdded = qrcodeAdded().subscribe(
-      result => {
-        const qrcode = result.data.qrcodeAdded
-
+      qrcode => {
         qrcodes.push(qrcode)
         qrcodes = qrcodes
       }
     )
+    subscriptions.qrcodeUpdated = qrcodeUpdated().subscribe(
+      qrcode => {
+        const qrcodeIndex = qrcodes.findIndex(
+          c => c.id === qrcode.id
+        )
+
+        if (qrcodeIndex !== -1) {
+          Object.assign(qrcodes[qrcodeIndex], qrcode)
+          qrcodes = qrcodes
+        }
+      }
+    )
     subscriptions.qrcodeRemoved = qrcodeRemoved().subscribe(
-      result => {
-        const qrcode = result.data.qrcodeRemoved
+      qrcode => {
         const qrcodeIndex = qrcodes.findIndex(
           c => c.id === qrcode.id
         )
@@ -170,6 +167,7 @@
 
   onDestroy(() => {
     subscriptions.qrcodeAdded.unsubscribe()
+    subscriptions.qrcodeUpdated.unsubscribe()
     subscriptions.qrcodeRemoved.unsubscribe()
   })
 
