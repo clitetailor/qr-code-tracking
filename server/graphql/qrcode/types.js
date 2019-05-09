@@ -14,9 +14,15 @@ const typeDefs = /* GraphQL */ `
     description: String
   }
 
+  type QRCodePublicData {
+    id: ID
+    redirectUrl: String
+  }
+
   extend type Query {
     qrcodes: [QRCode]
     qrcode(id: ID): QRCode
+    qrcodePublicData(id: ID): QRCodePublicData
   }
 
   extend type Mutation {

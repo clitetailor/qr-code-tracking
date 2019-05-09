@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       qrcodeId: DataTypes.INTEGER,
       latitude: DataTypes.FLOAT,
-      longitude: DataTypes.FLOAT
+      longitude: DataTypes.FLOAT,
+      userAgent: DataTypes.STRING
     },
     {}
   )

@@ -38,7 +38,7 @@
               class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
               on:click="{() => page(`/detail/${qrcode.id}`)}"
             >
-              More
+              Detail
             </a>
             <a
               class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
@@ -112,6 +112,8 @@
 </style>
 
 <script>
+  import { onMount, onDestroy } from 'svelte'
+
   import {
     getQRCodes,
     removeQRCode,

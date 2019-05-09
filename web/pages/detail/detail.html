@@ -10,25 +10,141 @@
       <span class="mdl-layout-title">New</span>
     </div>
   </header>
-  <main class="mdl-layout__content">
-    <HereMap bind:this="{hereMap}"></HereMap>
-    {#each trackingInfos as trackingInfo}
-    <div>
-      <span>Longitude: {trackingInfo.longitude}</span>
-      <span>Latitude: {trackingInfo.latitude}</span>
+  <main class="mdl-layout__content c-detail">
+    <div class="c-detail__here-map">
+      <HereMap bind:this="{hereMap}"></HereMap>
     </div>
-    {/each}
+
+    <div class="c-detail__content">
+      <div
+        class="mdl-grid mdl-grid--no-spacing mdl-shadow--2dp c-detail__section"
+      >
+        <div
+          class="mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white c-detail__image"
+        >
+          <img src="/assets/{qrcodeId}.png" alt="qrcode" />
+        </div>
+        <div
+          class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone"
+        >
+          <div class="mdl-card__supporting-text">
+            <p></p>
+            <p>
+              <b>Title:</b>
+              <span>{qrcode.title}</span>
+            </p>
+            <p>
+              <b>Description:</b>
+              <span>{qrcode.description}</span>
+            </p>
+            <p>
+              <b>Redirect URL:</b>
+              <a>{qrcode.redirectUrl}</a>
+            </p>
+            <p>
+              <b>Tracking URL:</b>
+              <a href="/qrcode/{qrcodeId}">
+                /qrcode/{qrcode.id}
+              </a>
+            </p>
+          </div>
+
+          <div class="mdl-card__menu">
+            <button
+              class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
+              on:click="{() => page(`/edit/${qrcode.id}`)}"
+            >
+              <i class="material-icons">edit</i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="mdl-grid mdl-grid--no-spacing c-detail__section"
+      >
+        <table
+          class="mdl-data-table mdl-js-data-table mdl-shadow--2dp c-detail__table"
+        >
+          <thead>
+            <tr>
+              <th class="mdl-data-table__cell--non-numeric">
+                Device
+              </th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each trackingInfos as trackingInfo}
+            <tr
+              on:click="{() => hereMap.navigateTo(trackingInfo.latitude, trackingInfo.longitude)}"
+            >
+              <td class="mdl-data-table__cell--non-numeric">
+                <span>
+                  {extractDeviceInfo(trackingInfo.userAgent)}
+                </span>
+              </td>
+              <td>
+                {trackingInfo.latitude}
+              </td>
+              <td>
+                {trackingInfo.longitude}
+              </td>
+            </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </main>
 </div>
 
 <style>
-  .c-qrcode__form {
-    width: 100%;
+  .c-detail {
     height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .c-detail__here-map {
+    height: 80%;
+    box-shadow: 0 3px 5px hsla(0, 0%, 80%, 0.8);
+  }
+
+  .c-detail__content {
+    padding: 40px;
+    padding-bottom: 80vh;
+  }
+
+  .c-detail__section {
+    max-width: 800px;
+    margin-bottom: 20px;
+  }
+
+  .c-detail__image {
     display: flex;
-    flex-flow: column nowrap;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
+  }
+
+  .c-detail__table {
+    padding-bottom: 50vh;
+  }
+
+  .c-detail__table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .c-detail__table tr {
+    cursor: pointer;
+  }
+
+  .c-detail__table td span {
+    word-break: break-all;
+    word-wrap: break-word;
   }
 </style>
 
@@ -39,6 +155,7 @@
 
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'
+  import { getQRCode } from '../../graphql/qrcode'
   import {
     getTrackingInfos,
     trackingInfoAdded
@@ -49,20 +166,23 @@
 
   let trackingInfos = []
   let hereMap
+  let qrcodeId = null
+  let qrcode = {}
 
   const subscriptions = {}
 
   page('/detail/:id', async context => {
-    const qrcodeId = parseInt(context.params.id)
+    qrcodeId = parseInt(context.params.id)
 
-    trackingInfos = await getTrackingInfos(qrcodeId)
+    qrcode = await getQRCode(qrcodeId)
+    trackingInfos = (await getTrackingInfos(qrcodeId)).reverse()
 
     hereMap.initMarkers(trackingInfos)
 
     subscriptions.trackingInfoAdded = trackingInfoAdded(
       qrcodeId
     ).subscribe(trackingInfo => {
-      trackingInfos.push(trackingInfo)
+      trackingInfos.unshift(trackingInfo)
       hereMap.addMarker(trackingInfo)
 
       trackingInfos = trackingInfos
@@ -72,4 +192,11 @@
   onDestroy(() => {
     subscriptions.trackingInfoAdded.unsubscribe()
   })
+
+  function extractDeviceInfo(userAgent) {
+    const matchGroup =
+      userAgent && userAgent.match(/\(([^\)]*)\)/)
+
+    return (matchGroup && matchGroup[1]) || userAgent
+  }
 </script>

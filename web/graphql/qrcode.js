@@ -64,6 +64,24 @@ export async function getQRCode(id) {
   return payload.data.qrcode
 }
 
+export async function getQRCodePublicData(id) {
+  const payload = await client.query({
+    query: gql`
+      query GetQRCodePublicData($id: ID) {
+        qrcodePublicData(id: $id) {
+          id
+          redirectUrl
+        }
+      }
+    `,
+    variables: {
+      id
+    }
+  })
+
+  return payload.data.qrcodePublicData
+}
+
 export async function getQRCodes() {
   const payload = await client.query({
     query: gql`

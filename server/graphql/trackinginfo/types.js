@@ -5,12 +5,14 @@ const typeDefs = /* GraphQL */ `
     latitude: Float
     longitude: Float
     redirectUrl: String
+    userAgent: String
   }
 
   input TrackingInfoInput {
     qrcodeId: String
     latitude: Float
     longitude: Float
+    userAgent: String
   }
 
   extend type Query {

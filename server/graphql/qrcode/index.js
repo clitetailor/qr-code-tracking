@@ -42,7 +42,29 @@ const resolvers = {
       })
 
       return qrcodes
-    })
+    }),
+
+    qrcodePublicData: async (root, args, context) => {
+      const { QRCode } = context
+      const { id } = args
+
+      const qrcode = await QRCode.findOne({
+        where: {
+          id
+        }
+      })
+
+      if (!qrcode) {
+        return new ApolloError('QRCode does not exist')
+      }
+
+      const { redirectUrl } = qrcode
+
+      return {
+        id,
+        redirectUrl
+      }
+    }
   },
 
   Mutation: {

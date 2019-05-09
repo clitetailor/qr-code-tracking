@@ -1,5 +1,7 @@
 <div class="c-here-map" bind:this="{mapContainer}"></div>
 
+<svelte:window on:resize="{onResize}"></svelte:window>
+
 <style>
   .c-here-map {
     width: 100%;
@@ -62,5 +64,19 @@
       lng: longitude
     })
     map.addObject(marker)
+  }
+
+  export function navigateTo(latitude, longitude) {
+    map.setCenter(
+      {
+        lat: latitude,
+        lng: longitude
+      },
+      true
+    )
+  }
+
+  function onResize() {
+    map.getViewPort().resize()
   }
 </script>

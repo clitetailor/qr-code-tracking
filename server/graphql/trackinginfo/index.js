@@ -34,6 +34,7 @@ const resolvers = {
           qrcodeId,
           latitude,
           longitude,
+          userAgent,
           QRCode: qrcode
         }) => {
           return {
@@ -42,6 +43,7 @@ const resolvers = {
             qrcodeId,
             latitude,
             longitude,
+            userAgent,
             redirectUrl: qrcode.redirectUrl
           }
         }
@@ -51,18 +53,29 @@ const resolvers = {
 
   Mutation: {
     addTrackingInfo: async (root, args, context) => {
-      const { TrackingInfo } = context
+      const { TrackingInfo, QRCode } = context
       const { trackingInfoInput } = args
 
       const trackingInfo = await TrackingInfo.create(
         trackingInfoInput
       )
 
-      pubsub.publish(TrackingInfoActions.TRACKING_INFO_ADDED, {
-        trackingInfoAdded: trackingInfo
+      const qrcode = await QRCode.findOne({
+        where: {
+          id: trackingInfo.qrcodeId
+        }
       })
 
-      return trackingInfo
+      const trackingInfoAdded = {
+        ...trackingInfo,
+        redirectUrl: qrcode.redirectUrl
+      }
+
+      pubsub.publish(TrackingInfoActions.TRACKING_INFO_ADDED, {
+        trackingInfoAdded
+      })
+
+      return trackingInfoAdded
     }
   },
 
