@@ -35,6 +35,7 @@ const resolvers = {
           latitude,
           longitude,
           userAgent,
+          createdAt,
           QRCode: qrcode
         }) => {
           return {
@@ -44,6 +45,7 @@ const resolvers = {
             latitude,
             longitude,
             userAgent,
+            createdAt,
             redirectUrl: qrcode.redirectUrl
           }
         }
@@ -60,6 +62,15 @@ const resolvers = {
         trackingInfoInput
       )
 
+      const {
+        id,
+        qrcodeId,
+        latitude,
+        longitude,
+        userAgent,
+        createdAt
+      } = trackingInfo
+
       const qrcode = await QRCode.findOne({
         where: {
           id: trackingInfo.qrcodeId
@@ -67,7 +78,12 @@ const resolvers = {
       })
 
       const trackingInfoAdded = {
-        ...trackingInfo,
+        id,
+        qrcodeId,
+        latitude,
+        longitude,
+        userAgent,
+        createdAt,
         redirectUrl: qrcode.redirectUrl
       }
 

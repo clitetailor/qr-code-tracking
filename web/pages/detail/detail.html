@@ -73,6 +73,7 @@
               </th>
               <th>Latitude</th>
               <th>Longitude</th>
+              <th>Time</th>
             </tr>
           </thead>
           <tbody>
@@ -90,6 +91,10 @@
               </td>
               <td>
                 {trackingInfo.longitude}
+              </td>
+              <td>
+                {moment(trackingInfo.createdAt)
+                .format('YYYY-MM-DD HH:mm:ss')}
               </td>
             </tr>
             {/each}
@@ -115,7 +120,7 @@
 
   .c-detail__content {
     padding: 40px;
-    padding-bottom: 80vh;
+    padding-bottom: 50vh;
   }
 
   .c-detail__section {
@@ -127,10 +132,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .c-detail__table {
-    padding-bottom: 50vh;
   }
 
   .c-detail__table {
@@ -150,6 +151,7 @@
 
 <script>
   import { onDestroy } from 'svelte'
+  import moment from 'moment'
 
   import HereMap from '../shared/here-map.html'
 
@@ -160,6 +162,7 @@
     getTrackingInfos,
     trackingInfoAdded
   } from '../../graphql/trackinginfo'
+  import { qrcodeUpdated } from '../../graphql/qrcode'
 
   loadMdl()
   const page = usePage()
@@ -177,7 +180,9 @@
     qrcode = await getQRCode(qrcodeId)
     trackingInfos = (await getTrackingInfos(qrcodeId)).reverse()
 
-    hereMap.initMarkers(trackingInfos)
+    if (trackingInfos.length > 0) {
+      hereMap.initMarkers(trackingInfos)
+    }
 
     subscriptions.trackingInfoAdded = trackingInfoAdded(
       qrcodeId
@@ -187,10 +192,19 @@
 
       trackingInfos = trackingInfos
     })
+
+    subscriptions.qrcodeUpdated = qrcodeUpdated().subscribe(
+      q => {
+        if (q.id === qrcodeId) {
+          qrcode = q
+        }
+      }
+    )
   })
 
   onDestroy(() => {
     subscriptions.trackingInfoAdded.unsubscribe()
+    subscriptions.qrcodeUpdated.unsubscribe()
   })
 
   function extractDeviceInfo(userAgent) {

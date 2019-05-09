@@ -13,6 +13,7 @@ export async function getTrackingInfos(qrcodeId) {
           longitude
           redirectUrl
           userAgent
+          createdAt
         }
       }
     `,
@@ -56,6 +57,7 @@ export function trackingInfoAdded(qrcodeId) {
             longitude
             redirectUrl
             userAgent
+            createdAt
           }
         }
       `,

@@ -6,6 +6,7 @@ const typeDefs = /* GraphQL */ `
     longitude: Float
     redirectUrl: String
     userAgent: String
+    createdAt: Date
   }
 
   input TrackingInfoInput {
