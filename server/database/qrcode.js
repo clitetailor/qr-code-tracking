@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       redirectUrl: DataTypes.STRING,
       description: DataTypes.STRING,
-      qrcodeUrl: DataTypes.STRING,
+      qrcodeUrl: DataTypes.STRING
     },
     {}
   )
