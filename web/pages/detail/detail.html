@@ -22,29 +22,44 @@
         <div
           class="mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white c-detail__image"
         >
-          <img src="/assets/{qrcodeId}.png" alt="qrcode" />
+          <img
+            bind:this="{qrcodeImg}"
+            src="/assets/{qrcodeId}.png"
+            alt="qrcode"
+          />
         </div>
         <div
           class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone"
         >
           <div class="mdl-card__supporting-text">
-            <p></p>
             <p>
               <b>Title:</b>
               <span>{qrcode.title}</span>
             </p>
             <p>
               <b>Description:</b>
+              {#if qrcode.description}
               <span>{qrcode.description}</span>
+              {:else}
+              <span>(None)</span>
+              {/if}
             </p>
             <p>
               <b>Redirect URL:</b>
-              <a>{qrcode.redirectUrl}</a>
+              {#if qrcode.redirectUrl}
+              <a href="{qrcode.redirectUrl}">
+                {qrcode.redirectUrl}
+              </a>
+              {:else}
+              <span>(None)</span>
+              {/if}
             </p>
             <p>
               <b>Tracking URL:</b>
-              <a href="/qrcode/{qrcodeId}">
-                /qrcode/{qrcode.id}
+              <a
+                href="{process.env.APP_DOMAIN}/qrcode/{qrcode.id}"
+              >
+                {process.env.APP_DOMAIN}/qrcode/{qrcode.id}
               </a>
             </p>
           </div>
@@ -168,9 +183,11 @@
   const page = usePage()
 
   let trackingInfos = []
-  let hereMap
+  let hereMap = null
   let qrcodeId = null
   let qrcode = {}
+  let qrcodeImg = null
+  let process = null
 
   const subscriptions = {}
 

@@ -5,7 +5,7 @@ const { AuthenticationError } = require('apollo-server')
 function generateAuthToken({ userId }) {
   return util.promisify(jwt.sign)(
     { userId },
-    process.env.SECRET_KEY,
+    process.env.APP_SECRET_KEY,
     {
       algorithm: 'HS256'
     }
@@ -15,7 +15,7 @@ function generateAuthToken({ userId }) {
 async function verifyAuthToken(token) {
   const { userId, iat } = await util.promisify(jwt.verify)(
     token,
-    process.env.SECRET_KEY,
+    process.env.APP_SECRET_KEY,
     {
       algorithm: 'HS256'
     }

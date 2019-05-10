@@ -1,9 +1,6 @@
 const { Router } = require('express')
 const path = require('path')
 
-const { contractAuthToken } = require('../auth')
-const { QRCode } = require('../database')
-
 const assetsRouter = Router()
 
 assetsRouter.get('/:qrcodeId', async (req, res) => {

@@ -33,7 +33,6 @@
       <div
         class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
         class:is-dirty="{redirectUrl}"
-        class:is-invalid="{errMsg}"
       >
         <input
           name="redirectUrl"
@@ -114,17 +113,20 @@
   })
 
   async function onSubmit(event) {
-    if (!id) {
-      event.preventDefault()
+    event.preventDefault()
 
+    if (title.match(/^\s*$/)) {
+      errMsg = 'Title is required!'
+      return
+    }
+
+    if (!id) {
       await createQRCode({
         title,
         description,
         redirectUrl
       })
     } else {
-      event.preventDefault()
-
       await updateQRCode(id, {
         title,
         description,

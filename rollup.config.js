@@ -44,7 +44,8 @@ export default {
       ...getDotEnvConfig([
         'HERE_MAP_API',
         'HERE_MAP_CODE',
-        'NODE_ENV'
+        'NODE_ENV',
+        'APP_DOMAIN'
       ])
     }),
     commonjs(),

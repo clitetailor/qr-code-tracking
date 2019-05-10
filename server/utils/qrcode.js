@@ -20,7 +20,7 @@ async function generateQRCode(qrcodeId) {
 }
 
 function trackingUrl(qrcodeId) {
-  return `${process.env.HOST_NAME}/code/${qrcodeId}`
+  return `${process.env.APP_DOMAIN}/qrcode/${qrcodeId}`
 }
 
 module.exports = {
