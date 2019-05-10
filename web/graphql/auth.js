@@ -43,6 +43,12 @@ export async function login(username, password) {
   return payload
 }
 
+export async function logout() {
+  localStorage.removeItem('token')
+  client.resetStore()
+  client.stop()
+}
+
 export async function checkAuth() {
   const payload = await client.query({
     query: gql`
