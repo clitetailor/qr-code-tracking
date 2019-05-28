@@ -1,6 +1,6 @@
-<div class="c-here-map" bind:this="{mapContainer}"></div>
+<div class="c-here-map" bind:this={mapContainer} />
 
-<svelte:window on:resize="{onResize}"></svelte:window>
+<svelte:window on:resize={onResize} />
 
 <style>
   .c-here-map {

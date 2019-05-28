@@ -2,16 +2,13 @@
   <header class="mdl-layout__header">
     <div
       class="mdl-layout__drawer-button"
-      on:click="{() => page('/')}"
-    >
+      on:click={() => page('/')}>
       <i class="material-icons">arrow_back</i>
     </div>
     <div class="mdl-layout__header-row">
-      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-layout-spacer" />
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="/login">
-          Login
-        </a>
+        <a class="mdl-navigation__link" href="/login">Login</a>
         <a class="mdl-navigation__link" href="/signup">
           Signup
         </a>
@@ -19,45 +16,35 @@
     </div>
   </header>
   <main class="mdl-layout__content c-login__layout">
-    <form
-      class="c-login__form"
-      action="#"
-      on:submit="{onSubmit}"
-    >
+    <form class="c-login__form" action="#" on:submit={onSubmit}>
       <h4 class="c-form__title">Login</h4>
       <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-      >
+        class="mdl-textfield mdl-js-textfield
+        mdl-textfield--floating-label">
         <input
           name="username"
           class="mdl-textfield__input"
           type="text"
-          bind:value="{username}"
-        />
-        <label class="mdl-textfield__label">
-          Username
-        </label>
+          bind:value={username} />
+        <label class="mdl-textfield__label">Username</label>
       </div>
       <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-        class:is-invalid="{errMsg}"
-      >
+        class="mdl-textfield mdl-js-textfield
+        mdl-textfield--floating-label"
+        class:is-invalid={errMsg}>
         <input
           name="password"
           class="mdl-textfield__input"
           type="password"
-          bind:value="{password}"
-        />
+          bind:value={password} />
         <label class="mdl-textfield__label" for="password">
           Password
         </label>
-        <span class="mdl-textfield__error">
-          {errMsg}
-        </span>
+        <span class="mdl-textfield__error">{errMsg}</span>
       </div>
       <button
-        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-      >
+        class="mdl-button mdl-js-button mdl-button--raised
+        mdl-button--colored">
         Submit
       </button>
     </form>

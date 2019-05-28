@@ -2,8 +2,7 @@
   <header class="mdl-layout__header">
     <div
       class="mdl-layout__drawer-button"
-      on:click="{() => page('/dashboard')}"
-    >
+      on:click={() => page('/dashboard')}>
       <i class="material-icons">arrow_back</i>
     </div>
     <div class="mdl-layout__header-row">
@@ -12,25 +11,25 @@
   </header>
   <main class="mdl-layout__content c-detail">
     <div class="c-detail__here-map">
-      <HereMap bind:this="{hereMap}"></HereMap>
+      <HereMap bind:this={hereMap} />
     </div>
 
     <div class="c-detail__content">
       <div
-        class="mdl-grid mdl-grid--no-spacing mdl-shadow--2dp c-detail__section"
-      >
+        class="mdl-grid mdl-grid--no-spacing mdl-shadow--2dp
+        c-detail__section">
         <div
-          class="mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white c-detail__image"
-        >
+          class="mdl-cell--3-col-desktop mdl-cell--2-col-tablet
+          mdl-cell--4-col-phone mdl-color--teal-100
+          mdl-color-text--white c-detail__image">
           <img
-            bind:this="{qrcodeImg}"
+            bind:this={qrcodeImg}
             src="/assets/{qrcodeId}.png"
-            alt="qrcode"
-          />
+            alt="qrcode" />
         </div>
         <div
-          class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone"
-        >
+          class="mdl-card mdl-cell mdl-cell--9-col-desktop
+          mdl-cell--6-col-tablet mdl-cell--4-col-phone">
           <div class="mdl-card__supporting-text">
             <p>
               <b>Title:</b>
@@ -39,26 +38,25 @@
             <p>
               <b>Description:</b>
               {#if qrcode.description}
-              <span>{qrcode.description}</span>
+                <span>{qrcode.description}</span>
               {:else}
-              <span>(None)</span>
+                <span>(None)</span>
               {/if}
             </p>
             <p>
               <b>Redirect URL:</b>
               {#if qrcode.redirectUrl}
-              <a href="{qrcode.redirectUrl}">
-                {qrcode.redirectUrl}
-              </a>
+                <a href={qrcode.redirectUrl}>
+                  {qrcode.redirectUrl}
+                </a>
               {:else}
-              <span>(None)</span>
+                <span>(None)</span>
               {/if}
             </p>
             <p>
               <b>Tracking URL:</b>
               <a
-                href="{process.env.APP_DOMAIN}/qrcode/{qrcode.id}"
-              >
+                href="{process.env.APP_DOMAIN}/qrcode/{qrcode.id}">
                 {process.env.APP_DOMAIN}/qrcode/{qrcode.id}
               </a>
             </p>
@@ -66,9 +64,9 @@
 
           <div class="mdl-card__menu">
             <button
-              class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-              on:click="{() => page(`/edit/${qrcode.id}`)}"
-            >
+              class="mdl-button mdl-button--icon mdl-js-button
+              mdl-js-ripple-effect"
+              on:click={() => page(`/edit/${qrcode.id}`)}>
               <i class="material-icons">edit</i>
             </button>
           </div>
@@ -76,11 +74,10 @@
       </div>
 
       <div
-        class="mdl-grid mdl-grid--no-spacing c-detail__section"
-      >
+        class="mdl-grid mdl-grid--no-spacing c-detail__section">
         <table
-          class="mdl-data-table mdl-js-data-table mdl-shadow--2dp c-detail__table"
-        >
+          class="mdl-data-table mdl-js-data-table
+          mdl-shadow--2dp c-detail__table">
           <thead>
             <tr>
               <th class="mdl-data-table__cell--non-numeric">
@@ -93,25 +90,19 @@
           </thead>
           <tbody>
             {#each trackingInfos as trackingInfo}
-            <tr
-              on:click="{() => hereMap.navigateTo(trackingInfo.latitude, trackingInfo.longitude)}"
-            >
-              <td class="mdl-data-table__cell--non-numeric">
-                <span>
-                  {extractDeviceInfo(trackingInfo.userAgent)}
-                </span>
-              </td>
-              <td>
-                {trackingInfo.latitude}
-              </td>
-              <td>
-                {trackingInfo.longitude}
-              </td>
-              <td>
-                {moment(trackingInfo.createdAt)
-                .format('YYYY-MM-DD HH:mm:ss')}
-              </td>
-            </tr>
+              <tr
+                on:click={() => hereMap.navigateTo(trackingInfo.latitude, trackingInfo.longitude)}>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <span>
+                    {extractDeviceInfo(trackingInfo.userAgent)}
+                  </span>
+                </td>
+                <td>{trackingInfo.latitude}</td>
+                <td>{trackingInfo.longitude}</td>
+                <td>
+                  {moment(trackingInfo.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                </td>
+              </tr>
             {/each}
           </tbody>
         </table>
@@ -168,7 +159,7 @@
   import { onDestroy } from 'svelte'
   import moment from 'moment'
 
-  import HereMap from '../shared/here-map.html'
+  import HereMap from '../shared/here-map.svelte'
 
   import { loadMdl } from '../../utils/mdl'
   import { usePage } from '../../utils/page'

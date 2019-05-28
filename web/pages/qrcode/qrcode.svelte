@@ -1,50 +1,54 @@
-<dialog class="mdl-dialog" bind:this="{dialog}">
+<dialog class="mdl-dialog" bind:this={dialog}>
   {#if loading}
-  <div class="mdl-dialog__content">
-    <p>Loading...</p>
-  </div>
+    <div class="mdl-dialog__content">
+      <p>Loading...</p>
+    </div>
   {:else if invalid}
-  <div class="mdl-dialog__content">
-    <p>This QRCode is unavailable!</p>
-  </div>
+    <div class="mdl-dialog__content">
+      <p>This QRCode is unavailable!</p>
+    </div>
   {:else if messageSended}
-  <div class="mdl-dialog__content">
-    <p>
-      Thanks for sending us the information about your location!
-    </p>
+    <div class="mdl-dialog__content">
+      <p>
+        Thanks for sending us the information about your
+        location!
+      </p>
+      {#if hasRedirectUrl}
+        <p>
+          Click
+          <b>Goto</b>
+          to go to redirect website!
+        </p>
+      {/if}
+    </div>
     {#if hasRedirectUrl}
-    <p>Click <b>Goto</b> to go to redirect website!</p>
+      <div class="mdl-dialog__actions">
+        <button
+          type="button"
+          class="mdl-button"
+          on:click={gotoWebsite}>
+          Goto
+        </button>
+      </div>
     {/if}
-  </div>
-  {#if hasRedirectUrl}
-  <div class="mdl-dialog__actions">
-    <button
-      type="button"
-      class="mdl-button"
-      on:click="{gotoWebsite}"
-    >
-      Goto
-    </button>
-  </div>
-  {/if}
-  <!--  -->
+    <!--  -->
   {:else}
-  <h4 class="mdl-dialog__title">QRCode Tracking</h4>
-  <div class="mdl-dialog__content">
-    <p>
-      Send us tracking info by clicking
-      <b>Send</b> button!
-    </p>
-  </div>
-  <div class="mdl-dialog__actions">
-    <button
-      type="button"
-      class="mdl-button"
-      on:click="{sendTrackingInfo}"
-    >
-      Send
-    </button>
-  </div>
+    <h4 class="mdl-dialog__title">QRCode Tracking</h4>
+    <div class="mdl-dialog__content">
+      <p>
+        Send us tracking info by clicking
+        <b>Send</b>
+        button!
+      </p>
+    </div>
+    <div class="mdl-dialog__actions">
+      <button
+        type="button"
+        class="mdl-button"
+        on:click={sendTrackingInfo}>
+        Send
+      </button>
+    </div>
   {/if}
 </dialog>
 

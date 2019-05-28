@@ -1,16 +1,16 @@
-<svelte:component this="{comp}"></svelte:component>
+<svelte:component this={comp} />
 
 <script>
   import { usePage } from './utils/page'
   import { checkAuth } from './graphql/auth'
 
-  import Home from './pages/index/index.html'
-  import Login from './pages/login/login.html'
-  import Signup from './pages/signup/signup.html'
-  import Dashboard from './pages/dashboard/dashboard.html'
-  import Edit from './pages/edit/edit.html'
-  import Detail from './pages/detail/detail.html'
-  import QRCode from './pages/qrcode/qrcode.html'
+  import Home from './pages/index/index.svelte'
+  import Login from './pages/login/login.svelte'
+  import Signup from './pages/signup/signup.svelte'
+  import Dashboard from './pages/dashboard/dashboard.svelte'
+  import Edit from './pages/edit/edit.svelte'
+  import Detail from './pages/detail/detail.svelte'
+  import QRCode from './pages/qrcode/qrcode.svelte'
 
   let comp
 

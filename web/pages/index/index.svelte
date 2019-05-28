@@ -1,11 +1,9 @@
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
-      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-layout-spacer" />
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="/login">
-          Login
-        </a>
+        <a class="mdl-navigation__link" href="/login">Login</a>
         <a class="mdl-navigation__link" href="/signup">
           Signup
         </a>
@@ -18,9 +16,9 @@
     </div>
     <div class="c-home__action">
       <button
-        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-        on:click="{() => page('/login')}"
-      >
+        class="mdl-button mdl-js-button mdl-button--raised
+        mdl-button--colored"
+        on:click={() => page('/login')}>
         Getting Started
       </button>
     </div>

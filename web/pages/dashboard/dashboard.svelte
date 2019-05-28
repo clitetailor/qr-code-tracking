@@ -2,13 +2,11 @@
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <span class="mdl-layout-title">Dashboard</span>
-      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-layout-spacer" />
       <nav class="mdl-navigation">
         <a
           class="mdl-navigation__link"
-          href="#"
-          on:click="{logout}"
-        >
+          on:click={logout}>
           Logout
         </a>
       </nav>
@@ -17,58 +15,57 @@
   <main class="mdl-layout__content c-dashboard__main">
     <div class="mdl-grid">
       {#each qrcodes as qrcode (qrcode.id)}
-      <div class="mdl-cell mdl-cell--4-col">
-        <div class="mdl-card  mdl-shadow--2dp c-card">
-          <div class="mdl-card__media c-card__image">
-            <img src="/assets/{qrcode.id}.png" alt="qrcode" />
-          </div>
-          <div class="mdl-card__title c-card__title">
-            <h2 class="mdl-card__title-text">
-              {qrcode.title}
-            </h2>
-          </div>
-          <div
-            class="mdl-card__supporting-text c-card__supporting-text"
-          >
-            {#if qrcode.description} {qrcode.description} {/if}
-          </div>
-          <div class="mdl-card__actions mdl-card--border">
-            <a
-              class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-              on:click="{() => page(`/detail/${qrcode.id}`)}"
-            >
-              Detail
-            </a>
-            <a
-              class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
-              on:click="{() => page(`/edit/${qrcode.id}`)}"
-            >
-              Edit
-            </a>
-          </div>
-          <div class="mdl-card__menu">
-            <button
-              class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-              on:click="{() => shareQRCode(qrcode)}"
-            >
-              <i class="material-icons">share</i>
-            </button>
-            <button
-              class="mdl-button mdl-js-button mdl-button--icon"
-              on:click="{() => onCardMenuRemoveClick(qrcode.id)}"
-            >
-              <i class="material-icons">close</i>
-            </button>
+        <div class="mdl-cell mdl-cell--4-col">
+          <div class="mdl-card mdl-shadow--2dp c-card">
+            <div class="mdl-card__media c-card__image">
+              <img src="/assets/{qrcode.id}.png" alt="qrcode" />
+            </div>
+            <div class="mdl-card__title c-card__title">
+              <h2 class="mdl-card__title-text">
+                {qrcode.title}
+              </h2>
+            </div>
+            <div
+              class="mdl-card__supporting-text
+              c-card__supporting-text">
+              {#if qrcode.description}{qrcode.description}{/if}
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+              <a
+                class="mdl-button mdl-button--colored
+                mdl-js-button mdl-js-ripple-effect"
+                on:click={() => page(`/detail/${qrcode.id}`)}>
+                Detail
+              </a>
+              <a
+                class="mdl-button mdl-button--colored
+                mdl-js-button mdl-js-ripple-effect"
+                on:click={() => page(`/edit/${qrcode.id}`)}>
+                Edit
+              </a>
+            </div>
+            <div class="mdl-card__menu">
+              <button
+                class="mdl-button mdl-button--icon mdl-js-button
+                mdl-js-ripple-effect"
+                on:click={() => shareQRCode(qrcode)}>
+                <i class="material-icons">share</i>
+              </button>
+              <button
+                class="mdl-button mdl-js-button mdl-button--icon"
+                on:click={() => onCardMenuRemoveClick(qrcode.id)}>
+                <i class="material-icons">close</i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       {/each}
     </div>
 
     <button
-      class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored c-button__fab"
-      on:click="{onFabButtonClick}"
-    >
+      class="mdl-button mdl-js-button mdl-button--fab
+      mdl-js-ripple-effect mdl-button--colored c-button__fab"
+      on:click={onFabButtonClick}>
       <i class="material-icons">add</i>
     </button>
   </main>

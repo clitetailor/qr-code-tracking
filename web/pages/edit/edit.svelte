@@ -2,8 +2,7 @@
   <header class="mdl-layout__header">
     <div
       class="mdl-layout__drawer-button"
-      on:click="{() => page('/dashboard')}"
-    >
+      on:click={() => page('/dashboard')}>
       <i class="material-icons">arrow_back</i>
     </div>
     <div class="mdl-layout__header-row">
@@ -14,58 +13,52 @@
     <form
       class="c-qrcode__form"
       action="#"
-      on:submit="{onSubmit}"
-    >
+      on:submit={onSubmit}>
       <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-        class:is-dirty="{title}"
-      >
+        class="mdl-textfield mdl-js-textfield
+        mdl-textfield--floating-label"
+        class:is-dirty={title}>
         <input
           name="title"
           class="mdl-textfield__input"
           type="text"
-          bind:value="{title}"
-        />
+          bind:value={title} />
         <label class="mdl-textfield__label" for="title">
           Title
         </label>
       </div>
       <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-        class:is-dirty="{redirectUrl}"
-      >
+        class="mdl-textfield mdl-js-textfield
+        mdl-textfield--floating-label"
+        class:is-dirty={redirectUrl}>
         <input
           name="redirectUrl"
           class="mdl-textfield__input"
           type="text"
-          bind:value="{redirectUrl}"
-        />
+          bind:value={redirectUrl} />
         <label class="mdl-textfield__label" for="description">
           Redirect URL
         </label>
       </div>
       <div
-        class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-        class:is-dirty="{description}"
-        class:is-invalid="{errMsg}"
-      >
+        class="mdl-textfield mdl-js-textfield
+        mdl-textfield--floating-label"
+        class:is-dirty={description}
+        class:is-invalid={errMsg}>
         <textarea
           name="description"
           class="mdl-textfield__input"
           rows="3"
           type="text"
-          bind:value="{description}"
-        ></textarea>
+          bind:value={description} />
         <label class="mdl-textfield__label" for="description">
           Description
         </label>
-        <span class="mdl-textfield__error">
-          {errMsg}
-        </span>
+        <span class="mdl-textfield__error">{errMsg}</span>
       </div>
       <button
-        class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
-      >
+        class="mdl-button mdl-js-button mdl-button--raised
+        mdl-button--colored">
         Submit
       </button>
     </form>
