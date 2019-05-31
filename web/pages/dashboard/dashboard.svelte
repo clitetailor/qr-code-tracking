@@ -4,9 +4,7 @@
       <span class="mdl-layout-title">Dashboard</span>
       <div class="mdl-layout-spacer" />
       <nav class="mdl-navigation">
-        <a
-          class="mdl-navigation__link"
-          on:click={logout}>
+        <a class="mdl-navigation__link" on:click={logout}>
           Logout
         </a>
       </nav>
