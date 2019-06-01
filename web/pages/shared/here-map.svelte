@@ -22,7 +22,8 @@
   onMount(() => {
     const platform = new H.service.Platform({
       app_id: process.env.HERE_MAP_API,
-      app_code: process.env.HERE_MAP_CODE
+      app_code: process.env.HERE_MAP_CODE,
+      useHTTPS: true
     })
 
     const defaultLayers = platform.createDefaultLayers()
