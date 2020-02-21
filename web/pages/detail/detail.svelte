@@ -1,3 +1,115 @@
+<script>
+  import { onDestroy } from 'svelte'
+  import moment from 'moment'
+
+  import HereMap from '../shared/here-map.svelte'
+
+  import { loadMdl } from '../../utils/mdl'
+  import { usePage } from '../../utils/page'
+  import { getQRCode } from '../../graphql/qrcode'
+  import {
+    getTrackingInfos,
+    trackingInfoAdded
+  } from '../../graphql/trackinginfo'
+  import { qrcodeUpdated } from '../../graphql/qrcode'
+
+  loadMdl()
+  const page = usePage()
+
+  let trackingInfos = []
+  let hereMap = null
+  let qrcodeId = null
+  let qrcode = {}
+  let qrcodeImg = null
+  let process = null
+
+  const subscriptions = {}
+
+  page('/detail/:id', async context => {
+    qrcodeId = parseInt(context.params.id)
+
+    qrcode = await getQRCode(qrcodeId)
+    trackingInfos = (await getTrackingInfos(qrcodeId)).reverse()
+
+    if (trackingInfos.length > 0) {
+      hereMap.initMarkers(trackingInfos)
+    }
+
+    subscriptions.trackingInfoAdded = trackingInfoAdded(
+      qrcodeId
+    ).subscribe(trackingInfo => {
+      trackingInfos.unshift(trackingInfo)
+      hereMap.addMarker(trackingInfo)
+
+      trackingInfos = trackingInfos
+    })
+
+    subscriptions.qrcodeUpdated = qrcodeUpdated().subscribe(
+      q => {
+        if (q.id === qrcodeId) {
+          qrcode = q
+        }
+      }
+    )
+  })
+
+  onDestroy(() => {
+    subscriptions.trackingInfoAdded.unsubscribe()
+    subscriptions.qrcodeUpdated.unsubscribe()
+  })
+
+  function extractDeviceInfo(userAgent) {
+    const matchGroup =
+      userAgent && userAgent.match(/\(([^\)]*)\)/)
+
+    return (matchGroup && matchGroup[1]) || userAgent
+  }
+</script>
+
+<style>
+  .c-detail {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .c-detail__here-map {
+    height: 80%;
+    box-shadow: 0 3px 5px hsla(0, 0%, 80%, 0.8);
+  }
+
+  .c-detail__content {
+    padding: 40px;
+    padding-bottom: 50vh;
+  }
+
+  .c-detail__section {
+    max-width: 800px;
+    margin-bottom: 20px;
+  }
+
+  .c-detail__image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .c-detail__table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .c-detail__table tr {
+    cursor: pointer;
+  }
+
+  .c-detail__table td span {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+</style>
+
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div
@@ -110,115 +222,3 @@
     </div>
   </main>
 </div>
-
-<style>
-  .c-detail {
-    height: 100%;
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  .c-detail__here-map {
-    height: 80%;
-    box-shadow: 0 3px 5px hsla(0, 0%, 80%, 0.8);
-  }
-
-  .c-detail__content {
-    padding: 40px;
-    padding-bottom: 50vh;
-  }
-
-  .c-detail__section {
-    max-width: 800px;
-    margin-bottom: 20px;
-  }
-
-  .c-detail__image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .c-detail__table {
-    width: 100%;
-    table-layout: fixed;
-  }
-
-  .c-detail__table tr {
-    cursor: pointer;
-  }
-
-  .c-detail__table td span {
-    word-break: break-all;
-    word-wrap: break-word;
-  }
-</style>
-
-<script>
-  import { onDestroy } from 'svelte'
-  import moment from 'moment'
-
-  import HereMap from '../shared/here-map.svelte'
-
-  import { loadMdl } from '../../utils/mdl'
-  import { usePage } from '../../utils/page'
-  import { getQRCode } from '../../graphql/qrcode'
-  import {
-    getTrackingInfos,
-    trackingInfoAdded
-  } from '../../graphql/trackinginfo'
-  import { qrcodeUpdated } from '../../graphql/qrcode'
-
-  loadMdl()
-  const page = usePage()
-
-  let trackingInfos = []
-  let hereMap = null
-  let qrcodeId = null
-  let qrcode = {}
-  let qrcodeImg = null
-  let process = null
-
-  const subscriptions = {}
-
-  page('/detail/:id', async context => {
-    qrcodeId = parseInt(context.params.id)
-
-    qrcode = await getQRCode(qrcodeId)
-    trackingInfos = (await getTrackingInfos(qrcodeId)).reverse()
-
-    if (trackingInfos.length > 0) {
-      hereMap.initMarkers(trackingInfos)
-    }
-
-    subscriptions.trackingInfoAdded = trackingInfoAdded(
-      qrcodeId
-    ).subscribe(trackingInfo => {
-      trackingInfos.unshift(trackingInfo)
-      hereMap.addMarker(trackingInfo)
-
-      trackingInfos = trackingInfos
-    })
-
-    subscriptions.qrcodeUpdated = qrcodeUpdated().subscribe(
-      q => {
-        if (q.id === qrcodeId) {
-          qrcode = q
-        }
-      }
-    )
-  })
-
-  onDestroy(() => {
-    subscriptions.trackingInfoAdded.unsubscribe()
-    subscriptions.qrcodeUpdated.unsubscribe()
-  })
-
-  function extractDeviceInfo(userAgent) {
-    const matchGroup =
-      userAgent && userAgent.match(/\(([^\)]*)\)/)
-
-    return (matchGroup && matchGroup[1]) || userAgent
-  }
-</script>

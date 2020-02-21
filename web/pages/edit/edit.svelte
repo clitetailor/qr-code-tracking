@@ -1,3 +1,69 @@
+<script>
+  import { loadMdl } from '../../utils/mdl'
+  import { usePage } from '../../utils/page'
+  import {
+    createQRCode,
+    getQRCode,
+    updateQRCode
+  } from '../../graphql/qrcode'
+
+  loadMdl()
+  const page = usePage()
+
+  let errMsg = ''
+
+  let title = ''
+  let description = ''
+  let redirectUrl = ''
+
+  let id
+
+  page('/edit/:id', async ctx => {
+    id = ctx.params.id
+
+    const qrcode = await getQRCode(id)
+    title = qrcode.title
+    description = qrcode.description
+    redirectUrl = qrcode.redirectUrl
+  })
+
+  async function onSubmit(event) {
+    event.preventDefault()
+
+    if (title.match(/^\s*$/)) {
+      errMsg = 'Title is required!'
+      return
+    }
+
+    if (!id) {
+      await createQRCode({
+        title,
+        description,
+        redirectUrl
+      })
+    } else {
+      await updateQRCode(id, {
+        title,
+        description,
+        redirectUrl
+      })
+    }
+
+    page('/dashboard')
+  }
+</script>
+
+<style>
+  .c-qrcode__form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+</style>
+
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div
@@ -64,69 +130,3 @@
     </form>
   </main>
 </div>
-
-<style>
-  .c-qrcode__form {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: flex-start;
-  }
-</style>
-
-<script>
-  import { loadMdl } from '../../utils/mdl'
-  import { usePage } from '../../utils/page'
-  import {
-    createQRCode,
-    getQRCode,
-    updateQRCode
-  } from '../../graphql/qrcode'
-
-  loadMdl()
-  const page = usePage()
-
-  let errMsg = ''
-
-  let title = ''
-  let description = ''
-  let redirectUrl = ''
-
-  let id
-
-  page('/edit/:id', async ctx => {
-    id = ctx.params.id
-
-    const qrcode = await getQRCode(id)
-    title = qrcode.title
-    description = qrcode.description
-    redirectUrl = qrcode.redirectUrl
-  })
-
-  async function onSubmit(event) {
-    event.preventDefault()
-
-    if (title.match(/^\s*$/)) {
-      errMsg = 'Title is required!'
-      return
-    }
-
-    if (!id) {
-      await createQRCode({
-        title,
-        description,
-        redirectUrl
-      })
-    } else {
-      await updateQRCode(id, {
-        title,
-        description,
-        redirectUrl
-      })
-    }
-
-    page('/dashboard')
-  }
-</script>

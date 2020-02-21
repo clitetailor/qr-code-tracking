@@ -1,5 +1,3 @@
-<svelte:component this={comp} />
-
 <script>
   import { usePage } from './utils/page'
   import { checkAuth } from './graphql/auth'
@@ -71,3 +69,5 @@
     }
   }
 </script>
+
+<svelte:component this={comp} />

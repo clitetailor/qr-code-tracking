@@ -1,14 +1,3 @@
-<div class="c-here-map" bind:this={mapContainer} />
-
-<svelte:window on:resize={onResize} />
-
-<style>
-  .c-here-map {
-    width: 100%;
-    height: 100%;
-  }
-</style>
-
 <script>
   import { onMount, beforeUpdate } from 'svelte'
 
@@ -81,3 +70,14 @@
     map.getViewPort().resize()
   }
 </script>
+
+<style>
+  .c-here-map {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<div class="c-here-map" bind:this={mapContainer} />
+
+<svelte:window on:resize={onResize} />

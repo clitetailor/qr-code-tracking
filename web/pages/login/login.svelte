@@ -1,3 +1,47 @@
+<script>
+  import { login } from '../../graphql/auth'
+  import { loadMdl } from '../../utils/mdl'
+  import { usePage } from '../../utils/page'
+
+  let errMsg = ''
+
+  let username = ''
+  let password = ''
+
+  loadMdl()
+  const page = usePage()
+
+  async function onSubmit(event) {
+    event.preventDefault()
+    try {
+      const payload = await login(username, password)
+
+      page('/dashboard')
+    } catch (error) {
+      if ('graphQLErrors' in error) {
+        errMsg = error.graphQLErrors[0].message
+      }
+      throw error
+    }
+  }
+</script>
+
+<style>
+  .c-login__form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .c-form__title {
+    margin: 0;
+    width: auto;
+  }
+</style>
+
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div
@@ -50,47 +94,3 @@
     </form>
   </main>
 </div>
-
-<style>
-  .c-login__form {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .c-form__title {
-    margin: 0;
-    width: auto;
-  }
-</style>
-
-<script>
-  import { login } from '../../graphql/auth'
-  import { loadMdl } from '../../utils/mdl'
-  import { usePage } from '../../utils/page'
-
-  let errMsg = ''
-
-  let username = ''
-  let password = ''
-
-  loadMdl()
-  const page = usePage()
-
-  async function onSubmit(event) {
-    event.preventDefault()
-    try {
-      const payload = await login(username, password)
-
-      page('/dashboard')
-    } catch (error) {
-      if ('graphQLErrors' in error) {
-        errMsg = error.graphQLErrors[0].message
-      }
-      throw error
-    }
-  }
-</script>
