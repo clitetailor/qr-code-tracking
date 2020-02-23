@@ -1,12 +1,44 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+#![feature(decl_macro, proc_macro_hygiene)]
 
-#[macro_use] extern crate rocket;
+use rocket::{response::content, State};
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+use juniper::{
+    tests::{model::Database, schema::Query},
+    EmptyMutation, RootNode,
+};
+
+type Schema = RootNode<'static, Query, EmptyMutation<Database>>;
+
+#[rocket::get("/")]
+fn graphql_playground() -> content::Html<String> {
+    juniper_rocket::playground_source("/graphql")
+}
+
+#[rocket::get("/graphql?<request>")]
+fn get_graphql_handler(
+    context: State<Database>,
+    request: juniper_rocket::GraphQLRequest,
+    schema: State<Schema>,
+) -> juniper_rocket::GraphQLResponse {
+    request.execute(&schema, &context)
+}
+
+#[rocket::post("/graphql", data = "<request>")]
+fn post_graphql_handler(
+    context: State<Database>,
+    request: juniper_rocket::GraphQLRequest,
+    schema: State<Schema>,
+) -> juniper_rocket::GraphQLResponse {
+    request.execute(&schema, &context)
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket::ignite()
+        .manage(Database::new())
+        .manage(Schema::new(Query, EmptyMutation::<Database>::new()))
+        .mount(
+            "/",
+            rocket::routes![graphiql, get_graphql_handler, post_graphql_handler],
+        )
+        .launch();
 }
