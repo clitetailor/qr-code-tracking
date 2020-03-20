@@ -1,4 +1,3 @@
-use juniper::tests::model::Database;
 use rocket::{response::content, Route, State};
 
 use crate::graphql::Schema;
@@ -14,18 +13,16 @@ fn graphql_playground() -> content::Html<String> {
 
 #[rocket::post("/graphql", data = "<request>")]
 fn post_graphql_handler(
-    context: State<Database>,
     request: juniper_rocket::GraphQLRequest,
     schema: State<Schema>,
 ) -> juniper_rocket::GraphQLResponse {
-    request.execute(&schema, &context)
+    request.execute(&schema, &())
 }
 
 #[rocket::get("/graphql?<request>")]
 fn get_graphql_handler(
-    context: State<Database>,
     request: juniper_rocket::GraphQLRequest,
     schema: State<Schema>,
 ) -> juniper_rocket::GraphQLResponse {
-    request.execute(&schema, &context)
+    request.execute(&schema, &())
 }

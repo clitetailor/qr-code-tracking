@@ -1,10 +1,9 @@
-use juniper::{
-    tests::{model::Database, schema::Query},
-    EmptyMutation, RootNode,
-};
+use juniper::{EmptyMutation, RootNode};
 
-pub type Schema = RootNode<'static, Query, EmptyMutation<Database>>;
+use crate::model::query::Query;
+
+pub type Schema = RootNode<'static, Query, EmptyMutation<()>>;
 
 pub fn schema() -> Schema {
-    Schema::new(Query, EmptyMutation::<Database>::new())
+    Schema::new(Query, EmptyMutation::<()>::new())
 }

@@ -3,14 +3,17 @@
 #[macro_use]
 extern crate rocket;
 
+mod database;
 mod graphql;
+mod model;
 mod routes;
 
-use juniper::tests::model::Database;
+use dotenv::dotenv;
 
 fn main() {
+    dotenv().ok();
+
     rocket::ignite()
-        .manage(Database::new())
         .manage(graphql::schema())
         .mount("/", routes::routes())
         .launch();
